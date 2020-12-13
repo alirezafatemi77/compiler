@@ -1,0 +1,129 @@
+<template>
+  <div id="app" >
+    <div class="whole">
+      <div class="input">
+        <textarea name="" @keyup="myfunc" class="textt" id="" cols="56" rows="32" ></textarea>
+      </div>
+      <div class="show">
+        <div v-for="arr in result" :key="arr.token" class="holder">
+
+          <p> 
+            <span  class="padd color">   {{arr.token}}</span>
+            <span class="padd" >     {{arr.value}}</span>
+          </p>
+        
+        </div>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+
+import res1 from './main'
+import parse from './parse'
+import { mapMutations, mapState } from 'vuex'
+export default {
+  name: 'App',
+  data() {
+    return {
+      result: res1,
+      texttoparse:''
+    }
+  },
+  computed:{
+    ...mapState(['input']),
+    ...mapMutations(['getdata']),
+
+  },
+  methods: {
+    myfunc(e){
+      //this.$store.commit('getdata', e.target.value)
+      this.result= parse(e.target.value)
+      
+    }
+  },
+
+  mounted() {
+    console.log(res1)
+
+  },
+  watch:{
+ 
+  }
+}
+</script>
+
+<style>
+*{
+  margin: 0 !important;
+}
+html{
+  margin: 0!important;
+}
+body{
+  margin: 0 !important;
+}
+.whole{
+  min-height: 100vh;
+  height: 100%;
+  background-color: rgb(36, 36, 36);
+  color: white;
+   position: relative;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.input{
+width: 50%; position: relative;
+float: left;
+padding: 20px;
+box-sizing: border-box;
+ min-height: 100vh;
+  height: 100%;
+
+}
+.show{
+background-color: rgb(65, 65, 65);
+float: right;
+width: 50%;
+padding: 40px;
+box-sizing: border-box;
+ min-height: 100vh;
+  height: 100%;
+  position: relative;
+}
+.textt{
+    background-color: rgb(36, 36, 36);
+    border: none;
+    color: white;
+    font-size: 17px;
+    padding: 10px;
+      resize: none;
+}
+.textt:focus{
+    border: 0 none #FFF;
+    overflow: hidden;
+    outline:none;
+}
+.token{
+width: 50%;
+float: left;
+}
+.value{
+width: 50%;
+float: right;
+}
+.holder{
+
+}
+.color{
+  color: rgb(72, 238, 238);
+  font-size: 14pt;
+
+}
+.padd{
+ font-size: 14pt;
+ line-height: 10px;
+}
+</style>
