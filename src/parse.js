@@ -21,8 +21,18 @@ import MyGrammarParser from './gen/MyGrammarParser.js';
           res1.forEach(ele=>{
             if(ele.token == 'T_INT'||ele.token == 'T_bool'||ele.token == 'T_DOUBLE'||ele.token == 'T_STRING' ){
                 ele.type="token"
+              
             }else if(ele.token=='T_ID'||ele.token == 'T_INT_LITERAL'||ele.token == 'T_HEX_LITERAL'||ele.token == 'T_BOOL_LITERAL'||ele.token == 'T_DOUBLE_LITERAL'||ele.token == 'T_STRING_LITERAL'||ele.token =='COMMENT'||ele.token =='LINE_COMMENT'){
                 ele.type="both"
+                if(ele.token =='T_ID'){
+                    if(ele.value.length >= 31){
+                        ele.err='size error'
+                        ele.value=null
+                    }
+                }
+            }
+            else if(ele.length==0){
+                ele.err="undefinde token"
             }
             else{
                 ele.type="value"

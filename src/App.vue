@@ -10,6 +10,7 @@
           <p> 
             <span  class="padd color" v-if="arr.type!='value' || arr.type=='both'">   {{arr.token}}</span>
             <span class="padd" v-if=" arr.type!='token' || arr.type=='both'" >     {{arr.value}}</span>
+            <span v-if="arr.err" class="err">{{arr.err}}</span>
           </p>
         
         </div>
@@ -82,6 +83,9 @@ box-sizing: border-box;
  min-height: 100vh;
   height: 100%;
 
+}
+.err{
+  color: red;
 }
 .show{
 background-color: rgb(65, 65, 65);

@@ -7,6 +7,7 @@ export default class MyGrammarListener extends antlr4.tree.ParseTreeListener {
 
 	// Enter a parse tree produced by MyGrammarParser#constant.
 	enterConstant(ctx) {
+		console.log(ctx)
 	}
 
 	// Exit a parse tree produced by MyGrammarParser#constant.
