@@ -23,8 +23,7 @@
 <script>
 
 import res1 from './main'
-import parse from './parse'
-import { mapMutations, mapState } from 'vuex'
+import parses from './parse'
 export default {
   name: 'App',
   data() {
@@ -34,14 +33,13 @@ export default {
     }
   },
   computed:{
-    ...mapState(['input']),
-    ...mapMutations(['getdata']),
+
 
   },
   methods: {
     myfunc(e){
       //this.$store.commit('getdata', e.target.value)
-      this.result= parse(e.target.value)
+      this.result= parses(e.target.value)
       console.log(this.result)
     }
   },
