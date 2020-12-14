@@ -8,8 +8,8 @@
         <div v-for="arr in result" :key="arr.token" class="holder">
 
           <p> 
-            <span  class="padd color">   {{arr.token}}</span>
-            <span class="padd" >     {{arr.value}}</span>
+            <span  class="padd color" v-if="arr.type!='value' || arr.type=='both'">   {{arr.token}}</span>
+            <span class="padd" v-if=" arr.type!='token' || arr.type=='both'" >     {{arr.value}}</span>
           </p>
         
         </div>
@@ -41,7 +41,7 @@ export default {
     myfunc(e){
       //this.$store.commit('getdata', e.target.value)
       this.result= parse(e.target.value)
-      
+      console.log(this.result)
     }
   },
 
@@ -91,6 +91,7 @@ padding: 40px;
 box-sizing: border-box;
  min-height: 100vh;
   height: 100%;
+
   position: relative;
 }
 .textt{

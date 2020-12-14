@@ -1,201 +1,68 @@
-grammar MyGrammar; 
+grammar MyGrammar;
 
-
-
-
-CLASS               : 'class';
-
-PROGRAM             : 'Program';
-
-IF                  : 'if';
-
-ELSE                : 'else';
-
-FOR                 : 'for';
-
-RETURN              : 'return';
-
-BREAK               : 'break';
-
-CONTINUE            : 'continue';
-
-T_BOOLEAN             : 'bool';
-
-T_CHAR                : 'char';
-
+T_VOID                : 'void';
 T_INT                 : 'int';
-
-T_DOUBLE            :'double';
-
+T_DOUBLE              : 'double';
+T_BOOL                : 'bool';
 T_STRING              : 'string';
-
-TRUE                : 'True';
-
-FALSE               : 'False';
-
-VOID                : 'void';
-
-CALLOUT             : 'callout';
+T_NULL                : 'null';
+T_THIS                : 'this';
+T_FOR                 : 'for';
+T_WHILE               : 'while';
+T_IF                  : 'if';
+T_ELSE                : 'else';
+T_RETURN              : 'return';
+T_BREAK               : 'break';
+T_NEW                 : 'new';
+T_NEWARRAY            : 'NewArray';
+T_PRINT               : 'Print';
+T_READINTEGER         : 'ReadInteger';
+T_READLINE            : 'ReadLine';  
+T_TRUE				  : 'true';
+T_FALSE               : 'false';
 
 // Symbol Specification
-SEMICOLON           : ';';
-
-LCURLY              : '{';
-
-RCURLY              : '}';
-
-LSQUARE             : '[';
-
-RSQUARE             : ']';
-
-LROUND              : '(';
-
-RROUND              : ')';
-
-COMMA               : ',';
-
-QUOTES              : '"';
-
-APOSTROPHE          : '\'';
-
-ADD                 : '+';
-
-SUB                 : '-';
-
-MULTIPLY            : '*';
-
-DIVIDE              : '/';
-
-REMINDER            : '%';
-
-AND                 : '&&';
-
-OR                  : '||';
-
-NOT                 : '!';
-
-GREATER_OP          : '>';
-
-LESS_OP             : '<';
-
-GREATER_eq_op       : '>=';
-
-LESS_eq_op          : '<=';
-
-EQUAL_OP            : '=';
-
-ADD_eq_op           : '+=';
-
-SUB_eq_op           : '-=';
-
-EQUALITY_OP         : '==';
-
-UNEQUALITY_OP       : '!=';
-
+T_SEMICOLON           : ';';
+T_LCURLY              : '{';
+T_RCURLY              : '}';
+T_LSQUARE             : '[';
+T_RSQUARE             : ']';
+T_LROUND              : '(';
+T_RROUND              : ')';
+T_COMMA               : ',';
+T_DOT                 : '.';
+T_ADD                 : '+';
+T_SUB                 : '-';
+T_MULTIPLY            : '*';
+T_DIVIDE              : '/';
+T_REMINDER            : '%';
+T_AND                 : '&&';
+T_OR                  : '||';
+T_NOT                 : '!';
+T_GREATER_OP          : '>';
+T_LESS_OP             : '<';
+T_GREATER_eq_op       : '>=';
+T_LESS_eq_op          : '<=';
+T_EQUAL_OP            : '=';
+T_EQUALITY_OP         : '==';
+T_UNEQUALITY_OP       : '!=';
 
 // Variable names & literal specification
-
-ID                  : ALPHA ALPHA_NUM*; // for variable name
-
-ALPHA      : [a-zA-Z_];
-
-CHAR_LITERAL        : ALPHA+ ;
-
-DECIMAL_LITERAL     : [0-9]+;
-
-DIGIT      : [0-9];
-
-HEX_LITERAL         : '0'[xX][0-9a-fA-F]+;
-
-BOOL_LITERAL        : TRUE | FALSE;
-
-STRING_LITERAL      : '"' ( '\\'  ALPHA*| ~[\r\n\\"] )* '"';
-
-ALPHA_NUM           : ALPHA | DIGIT;
-
-HEX_DIGIT  : '0'[xX]([0-9] | [a-fA-F]);
-
-LINE_COMMENT        : '//' .*? '\n' -> skip; // skip single line comments starting from // and ending with new line
-
-COMMENT             : '/*' .*? '*/' -> skip; // skip mutliple comments
-
-//SPACE               : ' ' -> skip; // ignore spaces
-
-NEWLINE				: ('\r'? '\n' | '\r')+ -> skip;
+T_ID         : [a-zA-Z] ([a-zA-Z]|[0-9]|'_')*; 
 
 
-/*
- * Parser Rules
- */
+T_INT_LITERAL         : [1-9][0-9]* | '0' ;
+T_HEX_LITERAL         : '0'[xX][0-9a-fA-F]+;
+T_BOOL_LITERAL        : T_TRUE | T_FALSE;
+T_DOUBLE_LITERAL : [0-9]+ '.' [0-9]* ( [eE]('+' | '-')? [0-9]+ )? ;
 
-program		    : CLASS PROGRAM LCURLY field_declr* method_declr* RCURLY;
+T_STRING_LITERAL : '"' ~[\r\n"]* '"' ;
 
-vardeclr            : (var_type field_var) (COMMA var_type field_var)* SEMICOLON;
+WHITESPACE	: [ \n\t\r]+ -> skip ;
 
-field_declr         : var_type field_var (COMMA field_var)* SEMICOLON;
+COMMENT
+  : '/*' .*? '*/' -> channel(HIDDEN) ;
+LINE_COMMENT
+  : '//' ~[\r\n]* -> channel(HIDDEN) ;
 
-array_id            : ID LSQUARE int_literal RSQUARE;
-
-field_var           : var_id | array_id;
-
-var_id              : ID;
-
-method_declr        : return_type method_name LROUND ((var_type var_id) (COMMA var_type var_id)*)? RROUND block;
-
-return_type         : (var_type | VOID);
-
-block               : LCURLY vardeclr* statement* RCURLY;
-
-statement           : location assign_op expr
-                    | location assign_op expr SEMICOLON
-                    | method_call
-                    | IF LROUND expr RROUND block (ELSE block)?
-                    | var_id EQUAL_OP expr SEMICOLON
-                    | RETURN expr SEMICOLON
-                    // ending value can be a variable or integer literal
-                    | FOR var_id (EQUAL_OP int_literal)? COMMA ((var_id (EQUAL_OP int_literal)?) | int_literal) block
-                    | BREAK SEMICOLON;
-
-// intermediate rule for method call
-method_call_inter   : method_name LROUND (expr (COMMA expr)*)? RROUND;
-
-method_call         : method_call_inter
-                    | method_call_inter SEMICOLON
-                    | CALLOUT LROUND STRING_LITERAL (COMMA callout_arg (COMMA callout_arg)*)? RROUND SEMICOLON;
-
-expr                : location
-                    | literal
-                    | expr bin_op expr
-                    | SUB expr
-                    | method_call
-                    | NOT expr
-                    | LROUND expr RROUND;
-
-location            : var_id | array_id;
-
-callout_arg         : expr | STRING_LITERAL;
-
-int_literal         : DECIMAL_LITERAL | HEX_LITERAL;
-
-rel_op              : GREATER_OP | LESS_OP | LESS_eq_op | GREATER_eq_op;
-
-eq_op               : EQUALITY_OP | UNEQUALITY_OP;
-
-cond_op             : AND | OR;
-
-literal             : int_literal | CHAR_LITERAL | BOOL_LITERAL;
-
-bin_op              : arith_op | rel_op | eq_op | cond_op;
-
-arith_op            : ADD | SUB | MULTIPLY | DIVIDE | REMINDER;
-
-var_type            : T_INT | T_BOOLEAN;
-
-assign_op           : EQUAL_OP
-                    | ADD_eq_op
-                    | SUB_eq_op;
-
-method_name         : ID;
-
-// recognize the whitespace at the end to prevent string concatenation due to elemination of all sapces
-WHITESPACE			: [ \t\r\n] -> skip ;
+constant : T_INT_LITERAL | T_BOOL_LITERAL | T_DOUBLE_LITERAL | T_DOUBLE_LITERAL | T_HEX_LITERAL ;
